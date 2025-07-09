@@ -30,9 +30,9 @@ The version of val in planutils does the job of validation but doesn't provide p
 
 ## Running solver and VAL in python
 
-The python file formalizer_check.py has the functionality of using the solver with timeout and val. The following examples uses it against ground truth domain and problem files.
+The python file formalizer_check.py has the functionality of using the solver with timeout and val. The following example uses solver & val against ground truth domain and problem files. You could use ```run_solver``` or ```run_val``` independently in your code.
 
-Note: This offline solver results in null plan for groud truth domain.pddl and p01.pddl. I am trying to figure out what's the issue.
+Note: This offline solver results in null plan for groud truth domain.pddl and p01.pddl. (There are some differences between offline solver and online solver. FYI!)
 
 Command:
 ```
