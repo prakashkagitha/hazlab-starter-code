@@ -1,6 +1,7 @@
 # hazlab-starter-code
 Sample data and code for using solver and VAL in a typical LLM-as-formalizer paradigm
 
+## Installing libraries
 * Install python library: 
 ```pip install planutils```
 * Install solver: 
@@ -8,22 +9,35 @@ Sample data and code for using solver and VAL in a typical LLM-as-formalizer par
 * Install val: 
 ```planutils install -y val```
 * For the next step to work you typically need apptainer in your system but apptainer is installed server wide at /usr/bin/apptainer (no need to install, but in case you run into problems)
-* Use solver with domain and problem files: 
-```planutils run dual-bfws-ffparser data/textual_blocksworld/BlocksWorld-100_PDDL/domain.pddl data/textual_blocksworld/BlocksWorld-100_PDDL/p02.pddl```
-This will output the error into console and if plan is found, saves it to file “plan” to the current directory. (wasn’t able to figure out how to set output plan file path)
-* Use val with ground truth domain file, problem file, & plan: 
-```planutils run val Validate data/textual_blocksworld/BlocksWorld-100_PDDL/domain.pddl data/textual_blocksworld/BlocksWorld-100_PDDL/p02.pddl plan```
 
-There are some caveats with using this solver and val. For some problems, solver doesn't terminate so our programs run indefinetely. To solve this, I have python code I use that terminates the process in 5 seconds.
+## Running solver and VAL on command line
+
+* Use solver with domain and problem files: 
+
+```
+planutils run dual-bfws-ffparser data/textual_blocksworld/BlocksWorld-100_PDDL/domain.pddl data/textual_blocksworld/BlocksWorld-100_PDDL/p02.pddl
+```
+This will output the error into console and if plan is found, saves it to file “plan” to the current directory. (wasn’t able to figure out how to set output plan file path)
+
+* Use val with ground truth domain file, problem file, & plan: 
+```
+planutils run val Validate data/textual_blocksworld/BlocksWorld-100_PDDL/domain.pddl data/textual_blocksworld/BlocksWorld-100_PDDL/p02.pddl plan
+```
+
+There are some caveats with using this solver and val. For some problems, solver doesn't terminate so our programs run indefinetely. To solve this, the python code below uses timeouts, typically for 5 seconds.
 
 The version of val in planutils does the job of validation but doesn't provide plan repair advice similar to VAL from KCL-Planning github repository. (check Cassie git repo for instructions on that: https://github.com/CassieHuang22/llm-as-pddl-formalizer)
+
+## Running solver and VAL in python
 
 The python file formalizer_check.py has the functionality of using the solver with timeout and val. The following examples uses it against ground truth domain and problem files.
 
 Note: This offline solver results in null plan for groud truth domain.pddl and p01.pddl. I am trying to figure out what's the issue.
 
 Command:
-```python formalizer_check.py     data/textual_blocksworld/BlocksWorld-100_PDDL/domain.pddl     data/textual_blocksworld/BlocksWorld-100_PDDL/p02.pddl```
+```
+python formalizer_check.py     data/textual_blocksworld/BlocksWorld-100_PDDL/domain.pddl     data/textual_blocksworld/BlocksWorld-100_PDDL/p02.pddl
+```
 
 Output:
 
