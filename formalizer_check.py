@@ -4,13 +4,14 @@ formalizer_check.py – end-to-end LL​M-as-Formalizer test without temp files.
 
 Usage
 -----
-python scripts/formalizer_check.py \
+python formalizer_check.py \
     data/textual_blocksworld/BlocksWorld-100_PDDL/domain.pddl \
     data/textual_blocksworld/BlocksWorld-100_PDDL/p01.pddl
 """
 from __future__ import annotations
 
 import argparse, os, signal, subprocess, sys, textwrap
+import shutil
 from pathlib import Path
 from typing import Tuple
 
@@ -33,6 +34,9 @@ def _kill_proc_tree(pid: int, sig=signal.SIGTERM) -> None:
 # ───────────────────────────────────────────────────────────────────────────── #
 def run_solver(domain: str, problem: str, time_limit: int = TIME_LIMIT) -> Tuple[str | None, str]:
     """Run dual-bfws-ffparser offline and return (plan_text | None, log_text)."""
+    if shutil.which("planutils") is None:
+        raise FileNotFoundError("'planutils' command not found; please install planutils")
+
     plan_path = Path.cwd() / "plan"
     plan_path.unlink(missing_ok=True)
 
@@ -100,7 +104,11 @@ def main() -> None:
     ns = ap.parse_args()
 
     # 1) solve
-    plan_txt, solver_log = run_solver(ns.domain, ns.problem)
+    try:
+        plan_txt, solver_log = run_solver(ns.domain, ns.problem)
+    except FileNotFoundError as exc:
+        print(exc)
+        sys.exit(1)
     if plan_txt is None:
         print("❌  Solver failed or timed-out.")
         sys.exit(1)
